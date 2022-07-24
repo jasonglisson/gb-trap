@@ -63,6 +63,9 @@ const long yellowinterval = 400;           // interval at which to blink (millis
 
 int buttonState = 0;         // variable for reading the pushbutton status
 
+// Track to play
+uint8_t n = 0; //0
+
 // the setup function runs once when you press reset or power the board
 void setup()
 {
@@ -212,5 +215,6 @@ void blinkYellow() {
 } // end loop
 
 void playaudio() {
-  sfx.playTrack("T01     WAV");
+  sfx.playTrack(n);
+  sfx.playTrack((uint8_t)n);
 }
