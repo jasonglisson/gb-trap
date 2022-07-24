@@ -1,9 +1,11 @@
+//for seervo
 #include <ServoTimer2.h>
 //for the button
 #include <ezButton.h>
 // for the sound board
+#include <Adafruit_Soundboard.h>
+
 #include <SoftwareSerial.h>
-#include "Adafruit_Soundboard.h"
 
 // constants won't change
 const int BUTTON_PIN = 2; // Arduino pin connected to button's pin
@@ -18,13 +20,16 @@ const byte ledPinsArray[] = {6,7,8};
 const unsigned long oneSecond=1000;
 byte LEDcount;
 
-
 ServoTimer2 servo;
 
 // soundboard pins and setup
+// Reset pin
 #define SFX_RST 9
+// Receive pin
 #define SFX_RX 10
+// Send pin
 #define SFX_TX 11
+// Busy pin
 const int ACT = 12;    // this allows us to know if the audio is playing
 
 SoftwareSerial ss = SoftwareSerial(SFX_TX, SFX_RX);
@@ -61,7 +66,20 @@ int buttonState = 0;         // variable for reading the pushbutton status
 // the setup function runs once when you press reset or power the board
 void setup()
 {
-  Serial.begin(9600);               // initialize serial
+  // initialize serial
+  Serial.begin(115200);
+  Serial.println("Adafruit Sound Board!");
+  
+  // softwareserial at 9600 baud
+  ss.begin(9600);
+  // can also do Serial1.begin(9600)
+
+  if (!sfx.reset()) {
+    Serial.println("Not found");
+    while (1);
+  }
+  Serial.println("SFX board found");  
+ 
   servo.attach(SERVO_PIN);          // attaches the servo to the servo object
   pinMode(GreenLED_PIN, OUTPUT);        // set arduino pin to output mode
   pinMode(RedLED_PIN, OUTPUT);          // set arduino pin to output mode
@@ -194,5 +212,5 @@ void blinkYellow() {
 } // end loop
 
 void playaudio() {
-
+  sfx.playTrack("T01     WAV");
 }
